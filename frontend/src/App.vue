@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <div class="chat-area" ref="chatArea">
-      <div v-for="(message, index) in messages" :key="index">
-        <strong>{{ message.type === 'user' ? 'You: ' : 'Bot: ' }}</strong>{{ message.text }}
+    <div class="output-area">
+      <div v-for="(message, index) in messages" :key="index" class="message" :class="message.sender">
+        {{ message.text }}
       </div>
     </div>
     <div class="input-area">
-      <input v-model="messageInput" @keyup.enter="sendMessage" placeholder="Type your message" />
-      <input type="number" step="0.1" min="0" max="1" v-model="temperature" placeholder="Temperature" /> <!-- Add this line -->
-      <button @click="sendMessage">Send</button>
+      <textarea
+        v-model="userMessage"
+        @input="autoResize"
+        @keydown.enter="handleEnterKey"
+        placeholder="Type here..."
+      ></textarea>
+      <button @click="sendMessage">Send</button>  
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -24,6 +29,19 @@ export default {
     };
   },
   methods: {
+    handleEnterKey(event) {
+      if (!event.shiftKey) {
+        event.preventDefault();
+        this.messageInput = event.srcElement.value;
+        event.srcElement.value = '';
+        this.sendMessage();
+      }
+    },
+    autoResize(event) {
+      event.target.style.height = 'auto';
+      event.target.style.height = event.target.scrollHeight + 'px';
+    },
+
     async sendMessage() {
       const message = this.messageInput.trim();
       if (!message) return;
@@ -51,31 +69,77 @@ export default {
 };
 </script>
 <style>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    margin: 100px; /* Add this line to create a margin around the app */
-    box-sizing: border-box; /* Add this line to ensure the margin doesn't cause overflow */
-  }
-  .chat-area {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem; /* Add this line to create a padding inside the chat area */
-  }
-  .input-area {
-    display: flex;
-  }
-  input {
-    flex: 1;
-  }
-  /* Dark mode styles */
-  body,
-  input,
-  button {
-    background-color: #333;
-    color: #fff;
-  }
+ #app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.output-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 16px;
+}
+
+.input-area {
+  display: flex;
+  background-color: #f2f2f2;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+textarea {
+  flex-grow: 1;
+  border: none;
+  resize: none;
+  overflow: hidden;
+  background-color: transparent;
+  font-family: inherit;
+  padding: 8px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.message {
+  margin-bottom: 8px;
+}
+
+.sender-user {
+  text-align: left;
+  color: #000;
+}
+
+.sender-bot {
+  text-align: left;
+  color: #3498db;
+}
+
+.button {
+  background-color: #3498db;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0 0 0 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.button:hover {
+  background-color: #2980b9;
+}
+
+
 </style>
 
