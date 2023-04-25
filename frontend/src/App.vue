@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <div class="output-area">
-      <div v-for="(message, index) in messages" :key="index" class="message" :class="message.sender">
+      <div v-for="(message, index) in messages" :key="index" class="message" :class="message.type">
         {{ message.text }}
       </div>
     </div>
-    <div class="input-area">
+    <div class="input-area" ref="chatArea">>
       <textarea
-        v-model="userMessage"
+        
         @input="autoResize"
         @keydown.enter="handleEnterKey"
         placeholder="Type here..."
       ></textarea>
-      <button @click="sendMessage">Send</button>  
+      <!--<button @click="sendMessage">Send</button>  -->
     </div>
   </div>
 </template>
@@ -73,7 +73,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
-  margin-top: 100px;
+  /* margin-top: 100px; */
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -82,18 +82,23 @@ export default {
 }
 
 .output-area {
-  flex-grow: 1;
-  overflow-y: auto;
+  flex-grow: .9;
+  overflow-y: scroll;
   margin-bottom: 16px;
-  border-bottom: 1px solid #ccc;
+  /* border-bottom: 1px solid #9c9c9c; */
   padding-bottom: 16px;
+  background-color: #e7e7e7;
+  border-radius: 3px;
+  text-align: left;
+  padding: 10px;
 }
 
 .input-area {
   display: flex;
-  background-color: #f2f2f2;
+  background-color: #252525;
   padding: 8px;
   border-radius: 4px;
+  
 }
 
 textarea {
@@ -103,24 +108,58 @@ textarea {
   overflow: hidden;
   background-color: transparent;
   font-family: inherit;
+  font-size: 14pt;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 15px;
   outline: none;
+  color: #FFF;
+      -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
 }
-
 .message {
   margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 18px;
+  max-width: 100%;
+  display: inline-block;
+  position: relative;
+  clear: both;
 }
 
-.sender-user {
-  text-align: left;
-  color: #000;
+.message::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
 }
 
-.sender-bot {
-  text-align: left;
-  color: #3498db;
+.user {
+  text-align: right;
+  background-color: #04ec00;
+  color: #ffffff;
 }
+
+.user::after {
+  border-width: 10px 10px 0 0;
+  border-color: #04ec00 transparent transparent transparent;
+  top: 0;
+  left: 0;
+}
+
+.bot {
+  text-align: left;
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.bot::after {
+  border-width: 10px 0 0 10px;
+  border-color: #3498db transparent transparent transparent;
+  top: 0;
+  right: 0;
+}
+
 
 .button {
   background-color: #3498db;
@@ -132,7 +171,7 @@ textarea {
   font-size: 16px;
   margin: 0 0 0 10px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 8px;
 }
 
