@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="output-area">
-      <div v-for="(message, index) in messages" :key="index" class="message" :class="message.type">
+      <div v-for="(message, index) in messages" :key="index" class="message" :class="[message.type, message.code]">
         {{ message.text }}
       </div>
     </div>
@@ -56,7 +56,7 @@ export default {
       });
 
       const data = await response.json();
-      this.messages.push({ type: 'bot', text: data.reply });
+      this.messages.push({ type: 'bot', text: data.reply, code: data.code ? "code-block" : "" });
       this.scrollToBottom();
     },
     scrollToBottom() {
@@ -119,11 +119,13 @@ textarea {
 .message {
   margin-bottom: 8px;
   padding: 8px 12px;
-  border-radius: 18px;
+  /* border-radius: 5px; */
   max-width: 100%;
-  display: inline-block;
+  /* display: inline-block; */
   position: relative;
   clear: both;
+  border-bottom: solid 1px #b2b2b2;
+
 }
 
 .message::after {
@@ -131,31 +133,30 @@ textarea {
   position: absolute;
   width: 0;
   height: 0;
-  border-style: solid;
 }
 
 .user {
-  text-align: right;
-  background-color: #04ec00;
-  color: #ffffff;
+  text-align: left;
+  /* background-color: #06bc03; */
+  /* color: #ffffff; */
 }
 
 .user::after {
-  border-width: 10px 10px 0 0;
-  border-color: #04ec00 transparent transparent transparent;
+  /* border-width: 10px 10px 0 0;
+  border-color: #04ec00 transparent transparent transparent; */
   top: 0;
   left: 0;
 }
 
 .bot {
   text-align: left;
-  background-color: #3498db;
-  color: #ffffff;
+  /* background-color: #3498db; */
+  /* color: #ffffff; */
 }
 
 .bot::after {
-  border-width: 10px 0 0 10px;
-  border-color: #3498db transparent transparent transparent;
+  /* border-width: 10px 0 0 10px; */
+  /* border-color: #3498db transparent transparent transparent; */
   top: 0;
   right: 0;
 }
@@ -177,6 +178,16 @@ textarea {
 
 .button:hover {
   background-color: #2980b9;
+}
+
+.code-block {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #252525;
+  color: #FFF;
+  padding: 8px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 
